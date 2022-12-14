@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/dolynchuk/emojis/issues"
   },
-  "homepage": "https://github.com/dolynchuk/emojis#readme"
+  "homepage": "https://github.com/dolynchuk/emojis#readme",
+  "dependencies": {
+    "emojis-categorised": "^1.0.0"
+  }
 }
