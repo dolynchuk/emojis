@@ -1,6 +1,6 @@
 {
   "name": "emojis-categorised",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Emojis with descriptions, categorised",
   "main": "index.js",
   "scripts": {
