@@ -1,6 +1,7 @@
-// Basic data-integrity checks for the emoji dataset.
+// Basic data-integrity and API checks for the emoji dataset.
 const assert = require("assert");
-const { emojis } = require("./index.js");
+const cjs = require("./index.js");
+const { emojis, categories, list, getCategory, search } = cjs;
 const json = require("./emojis.json");
 
 const EXPECTED_CATEGORIES = [
@@ -18,18 +19,15 @@ const EXPECTED_CATEGORIES = [
 assert.deepStrictEqual(emojis, json, "index.js and emojis.json differ");
 
 // Categories present and in the expected order.
-assert.deepStrictEqual(
-  Object.keys(emojis),
-  EXPECTED_CATEGORIES,
-  "unexpected categories"
-);
+assert.deepStrictEqual(Object.keys(emojis), EXPECTED_CATEGORIES, "unexpected categories");
+assert.deepStrictEqual(categories, EXPECTED_CATEGORIES, "categories export mismatch");
 
 let total = 0;
 const seen = new Set();
 for (const cat of EXPECTED_CATEGORIES) {
-  const list = emojis[cat];
-  assert(Array.isArray(list) && list.length > 0, `empty category: ${cat}`);
-  for (const e of list) {
+  const items = emojis[cat];
+  assert(Array.isArray(items) && items.length > 0, `empty category: ${cat}`);
+  for (const e of items) {
     assert(typeof e.text === "string" && e.text.length > 0, `bad text in ${cat}`);
     assert(typeof e.label === "string" && e.label.length > 0, `bad label in ${cat}`);
     assert(!seen.has(e.text), `duplicate emoji: ${e.text} (${e.label})`);
@@ -38,4 +36,25 @@ for (const cat of EXPECTED_CATEGORIES) {
   }
 }
 
-console.log(`OK: ${total} emojis across ${EXPECTED_CATEGORIES.length} categories, no duplicates.`);
+// Flat list export.
+assert.strictEqual(list.length, total, "list length != total emojis");
+assert(list.every((e) => e.category && e.text && e.label), "list entry missing fields");
+
+// getCategory helper.
+assert.strictEqual(getCategory("Flags").length, emojis["Flags"].length, "getCategory mismatch");
+assert.deepStrictEqual(getCategory("Nope"), [], "getCategory unknown should be []");
+
+// search helper.
+const hits = search("grinning");
+assert(hits.length > 0 && hits.every((e) => /grinning/i.test(e.label)), "search failed");
+
+// ESM entry must expose the same data.
+import("./index.mjs").then((esm) => {
+  assert.deepStrictEqual(esm.emojis, emojis, "ESM emojis differ from CJS");
+  assert.strictEqual(esm.list.length, list.length, "ESM list differs from CJS");
+  assert.deepStrictEqual(esm.default, emojis, "ESM default export should be emojis");
+  console.log(`OK: ${total} emojis across ${EXPECTED_CATEGORIES.length} categories; CJS + ESM + helpers verified.`);
+}).catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

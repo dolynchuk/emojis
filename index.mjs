@@ -7701,4 +7701,5 @@ function search(query) {
   return list.filter((e) => e.label.toLowerCase().includes(q));
 }
 
-module.exports = { emojis, categories, list, getCategory, search };
+export { emojis, categories, list, getCategory, search };
+export default emojis;

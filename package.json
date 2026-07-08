@@ -1,12 +1,27 @@
 {
   "name": "emojis-categorised",
-  "version": "1.1.0",
-  "description": "All emojis with descriptions, grouped by category (Unicode 17.0)",
+  "version": "1.2.0",
+  "description": "All emojis grouped by category with human-readable labels. Full Unicode 17.0 set, zero dependencies, TypeScript types, ESM + CommonJS.",
   "main": "index.js",
+  "module": "index.mjs",
+  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.mjs",
+      "require": "./index.js"
+    },
+    "./emojis.json": "./emojis.json",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
   "files": [
     "index.js",
+    "index.mjs",
+    "index.d.ts",
     "emojis.json",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "node generate.js",
@@ -17,8 +32,24 @@
     "url": "git+https://github.com/dolynchuk/emojis.git"
   },
   "keywords": [
+    "emoji",
     "emojis",
-    "emoji"
+    "categorized",
+    "categorised",
+    "category",
+    "categories",
+    "grouped",
+    "emoji-list",
+    "emoji-data",
+    "emoji-json",
+    "emoji-category",
+    "emoji-categories",
+    "emoji-picker",
+    "emoji-metadata",
+    "unicode",
+    "unicode-emoji",
+    "smileys",
+    "labels"
   ],
   "author": "Maksym Dolynchuk dolinchuk2000@gmail.com",
   "license": "ISC",
